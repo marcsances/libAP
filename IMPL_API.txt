@@ -1,0 +1,30 @@
+﻿The following document provides documentation for the API implementation of this library.
+
+MEDIAPLAYER.CS
+==============
+OPCODE			ZPLAYVER
+PARAMS			null
+DESC			Returns the version of libZPlay library.
+RETURN			0 int> the version of libZPlay.
+
+OPCODE			SETTEMPO
+PARAMS			0 int> the tempo, from 1 (minimum) to overflow. Normal value is 100.
+DESC			Sets the tempo of the audio player instance.
+RETURN			0 bool> True if could set tempo, false otherwise.
+THROWS			ArgumentException if params are not correctly given.
+
+OPCODE			SETPITCH
+PARAMS			0 int> the pitch, from 1 (minimum) to overflow. Normal value is 100.
+DESC			Sets the pitch of the audio player instance.
+RETURN			0 bool> True if could set pitch, false otherwise.
+THROWS			ArgumentException if params are not correctly given.
+
+OPCODE			GETTEMPO
+PARAMS			null
+DESC			Gets the tempo of the audio player instance.
+RETURN			0 int> the tempo, from 1 (minimum) to overflow. Normal value is 100. -1 if media was not available.
+
+OPCODE			GETPITCH
+PARAMS			null
+DESC			Gets the pitch of the audio player instance.
+RETURN			0 int> the pitch, from 1 (minimum) to overflow. Normal value is 100. -1 if media was not available.
