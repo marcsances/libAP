@@ -49,6 +49,8 @@
     <Compile Include="SongID3.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="COPYING" />
+    <None Include="COPYING-GPL" />
     <Content Include="IMPL_API.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
