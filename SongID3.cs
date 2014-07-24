@@ -10,9 +10,9 @@ namespace libap
     /**
      * A class to provide an universal framework for ID3 information manipulation. This class is independent from the ID3 metasystem used.
      */
-    class SongID3
+    public class SongID3
     {
-        private string FILENAME; ///< The file name of this instance.
+        protected string FILENAME; ///< The file name of this instance.
         private string TITLE; ///< The title of the song.
         private string ALBUM; ///< The album of the song.
         private string ARTIST; ///< The artist of the song.
@@ -22,12 +22,15 @@ namespace libap
         private Bitmap ALBUM_IMAGE; ///< The album image of the song.
         private int TRACKNO; ///< The track number of the song.
 
-        
+        public SongID3()
+        {
+
+        }
         /**
          * Automatically generate an instance of SongID3 by loading ID3 of file "filename".
          * \param filename The file name of the song to load ID3 from.
          */
-        public SongID3(String filename)
+        public SongID3(string filename)
         {
             this.FILENAME = filename;
             refreshID3();
@@ -62,7 +65,7 @@ namespace libap
          * Load extended ID3 file information.
          * \param tinf the ID3InfoEx instance.
          */
-        private void impl_loadID3InfoEx(TID3InfoEx tinf)
+        protected void impl_loadID3InfoEx(TID3InfoEx tinf)
         {
             this.TITLE = tinf.Title;
             this.ARTIST = tinf.Artist;
@@ -96,7 +99,7 @@ namespace libap
          * Load standard ID3 file information.
          * \param tinf the ID3Info instance.
          */
-        private void impl_loadID3Info(TID3Info tinf)
+        protected void impl_loadID3Info(TID3Info tinf)
         {
             this.TITLE = tinf.Title;
             this.ARTIST = tinf.Artist;
@@ -124,7 +127,7 @@ namespace libap
         /**
          * Load basic file information.
          */
-        private void loadBasicInfo()
+        protected void loadBasicInfo()
         {
             this.TITLE = libAP.basename(this.FILENAME);
             this.ARTIST = "";
@@ -135,11 +138,21 @@ namespace libap
             this.TRACKNO = 0;
             this.GENRE = "";
         }
-
+        public void Dispose()
+        {
+            this.TITLE = "";
+            this.ARTIST = "";
+            this.ALBUM = "";
+            this.ALBUM_IMAGE = null;
+            this.COMMENT = "";
+            this.YEAR = 0;
+            this.TRACKNO = 0;
+            this.GENRE = "";
+        }
         /**
          * Refresh or load ID3 information from file.
          */
-        public void refreshID3()
+        public virtual void refreshID3()
         {
             // (impl
             try

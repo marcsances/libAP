@@ -23,9 +23,9 @@ using System.Threading.Tasks;
 using libZPlay; // impl
 namespace libap
 {
-    class MediaPlayer
+    public class MediaPlayer
     {
-
+        private static MediaPlayer instance = null;
         private AudioFile af = null; ///< The audio file of this instance.
 
         private ZPlay impl_ap = null; ///< (IMPLEMENTATION EXCLUSIVE) The audio player instance.
@@ -165,6 +165,48 @@ namespace libap
             else return false;
         }
 
+
+        /**
+         * Gets a player. Prevents multiple players from getting stacked, allowing easier coding.
+         * If there is no current instance, inits one.
+         * \return The instance.
+         */
+        public static MediaPlayer getInstance(AudioFile af)
+        {
+            if (instance != null)
+            {
+                instance.Dispose();
+            }
+            instance = new MediaPlayer(af);
+            return instance;
+        }
+
+        /**
+         * Similar to previous, but will not init instance if null.
+         * \return The instance.
+         */
+        public static MediaPlayer getInstance()
+        {
+            return instance;
+        }
+
+        public void Dispose()
+        {
+            
+            try
+            {
+                this.af.Dispose();
+                this.af = null;
+                this.impl_ap.Close();
+                this.impl_ap = null;
+            }
+            finally
+            {
+                this.af = null;
+                this.impl_ap = null;
+            }
+
+        }
         /**
          * \brief (SPECIAL METHOD) Calls a method from the implementation, if available.
          * Calls a method from the implementation API, if available.
