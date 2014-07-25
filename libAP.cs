@@ -48,7 +48,7 @@ namespace libap
         public static string basename(string filename)
         {
             string[] filenamearr = filename.Split(getDirectorySeparator(filename));
-            return filenamearr[filenamearr.Length - 1];
+            return filenamearr[filenamearr.Length - 1].Split('.')[0];
         }
 
 

@@ -276,5 +276,12 @@ namespace libap
             throw new NotImplementedException("This feature is not available in current libAP implementation. Please contact application developer.");
         }
 
+        public Bitmap forceLoadImage()
+        {
+            TID3InfoEx inf = new TID3InfoEx();
+            new ZPlay().LoadFileID3Ex(this.FILENAME, TStreamFormat.sfAutodetect, ref inf, true);
+            if (inf.Picture.Bitmap.Size.Width > 1) return inf.Picture.Bitmap; else return null;
+        }
+
     }
 }

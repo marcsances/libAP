@@ -60,6 +60,7 @@ namespace libap
             {
                 if (this.impl_ap.StartPlayback())
                 {
+                    if (this.OnPlaybackStarted!=null) this.OnPlaybackStarted(this,new EventArgs());
                     this.stopped = false;
                     return true;
                 }
@@ -71,8 +72,9 @@ namespace libap
             }
             else if (this.media_ready) {
                 if (this.impl_ap.ResumePlayback()) {
-                this.paused = false;
-                return true;
+                    if (this.OnPlaybackResumed!=null) this.OnPlaybackResumed(this, new EventArgs());
+                    this.paused = false;
+                    return true;
                 } else {
                 return false;
                 } 
@@ -93,6 +95,7 @@ namespace libap
             {
                 if (this.impl_ap.PausePlayback())
                 {
+                    if (this.OnPlaybackPaused!=null) this.OnPlaybackPaused(this, new EventArgs());
                     this.paused = true;
                     return true;
                 }
@@ -121,6 +124,29 @@ namespace libap
         }
 
         /**
+         * If playing, pauses playback. If stopped or paused, begins or resumes playback.
+         * \return whatever returns the called function
+         */
+        public bool playpause()
+        {
+            if (this.media_ready && (this.paused || this.stopped))
+            {
+                return this.play();
+            }
+            else return this.pause();
+        }
+
+        /**
+         * Checks if it's now playing.
+         * \return if it's now playing.
+         */
+        public bool playing()
+        {
+            return this.media_ready && !this.paused && !this.stopped;
+        }
+
+
+        /**
          * Seek the playback to a position.
          * \param pos The position to seek, from 0 to L.
          * \return true if seeked successfully, or false if position was outside bounds, there was an error, or media was not ready.
@@ -147,6 +173,36 @@ namespace libap
                 TStreamInfo inf = new TStreamInfo();
                 this.impl_ap.GetStreamInfo(ref inf);
                 return inf.Length.ms;
+            }
+            else return -1;
+        }
+
+
+        public bool checkIfEndedTrigger()
+        {
+            TStreamStatus tst = new TStreamStatus();
+            this.impl_ap.GetStatus(ref tst);
+            if (!tst.fPlay && !this.paused && !this.stopped)
+            {
+                if (this.OnPlaybackFinished!=null) this.OnPlaybackFinished(this, new EventArgs());
+                return true;
+            }
+            else return false;
+        }
+
+        /**
+         * Gets current position in audio playback.
+         * \return The position, in milliseconds, or -1 if media is not available.
+         */
+
+        public long getPosition()
+        {
+            if (this.media_ready)
+            {
+                if (!this.paused && !this.stopped) checkIfEndedTrigger();
+                TStreamTime inf = new TStreamTime();
+                if (this.impl_ap!=null) this.impl_ap.GetPosition(ref inf);
+                return inf.ms;
             }
             else return -1;
         }
@@ -190,23 +246,33 @@ namespace libap
             return instance;
         }
 
+        /**
+         * Dispose this class.
+         */
         public void Dispose()
         {
             
             try
             {
-                this.af.Dispose();
-                this.af = null;
-                this.impl_ap.Close();
-                this.impl_ap = null;
+                
+                if (this.impl_ap != null)
+                {
+                    this.impl_ap.Close();
+                    this.impl_ap = null;
+                }
             }
             finally
             {
-                this.af = null;
                 this.impl_ap = null;
             }
 
         }
+
+        public event EventHandler OnPlaybackStarted;
+        public event EventHandler OnPlaybackFinished;
+        public event EventHandler OnPlaybackPaused;
+        public event EventHandler OnPlaybackResumed;
+
         /**
          * \brief (SPECIAL METHOD) Calls a method from the implementation, if available.
          * Calls a method from the implementation API, if available.
