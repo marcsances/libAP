@@ -278,9 +278,30 @@ namespace libap
 
         public Bitmap forceLoadImage()
         {
-            TID3InfoEx inf = new TID3InfoEx();
-            new ZPlay().LoadFileID3Ex(this.FILENAME, TStreamFormat.sfAutodetect, ref inf, true);
-            if (inf.Picture.Bitmap.Size.Width > 1) return inf.Picture.Bitmap; else return null;
+            try
+            {
+                TID3InfoEx inf = new TID3InfoEx();
+                new ZPlay().LoadFileID3Ex(this.FILENAME, TStreamFormat.sfAutodetect, ref inf, true);
+                if (inf.Picture.Bitmap.Size.Width > 1) return inf.Picture.Bitmap; else return null;
+            }
+            catch (Exception ex)
+            {
+                return tryAgain();
+            }
+        }
+
+        public Bitmap tryAgain()
+        {
+            try
+            {
+                TID3InfoEx inf = new TID3InfoEx();
+                new ZPlay().LoadFileID3Ex(this.FILENAME, TStreamFormat.sfAutodetect, ref inf, true);
+                if (inf.Picture.Bitmap.Size.Width > 1) return inf.Picture.Bitmap; else return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
     }
