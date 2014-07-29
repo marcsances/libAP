@@ -59,7 +59,7 @@ namespace libap
          */
         private static char getDirectorySeparator(string filename)
         {
-            char[] directorycharacters={'\\','/'};
+            char[] directorycharacters = { '\\', '/' };
             try
             {
                 return filename.Substring(filename.IndexOfAny(directorycharacters), 1).ToCharArray()[0];
@@ -134,7 +134,9 @@ namespace libap
                 serializer.Serialize(FileStream, af);
                 FileStream.Close();
                 return true;
-            } catch {
+            }
+            catch
+            {
                 return false;
             }
 
@@ -156,10 +158,12 @@ namespace libap
                     return af;
                 }
                 else return null;
-            } catch {
+            }
+            catch
+            {
                 return null;
             }
-            
+
         }
 
         /**
@@ -173,11 +177,13 @@ namespace libap
                 Stream FileStream = File.Create(filename);
                 BinaryFormatter serializer = new BinaryFormatter();
                 AudioFileList afl = new AudioFileList();
-                laf.CopyTo(afl.innerList,0);
+                laf.CopyTo(afl.innerList, 0);
                 serializer.Serialize(FileStream, laf);
                 FileStream.Close();
                 return true;
-            } catch {
+            }
+            catch
+            {
                 return false;
             }
         }
@@ -190,21 +196,26 @@ namespace libap
         {
             try
             {
-                if (File.Exists(filename)) {
-                Stream FileStream = File.OpenRead(filename);
-                BinaryFormatter serializer = new BinaryFormatter();
-                AudioFileList afl = (AudioFileList)serializer.Deserialize(FileStream);
-                FileStream.Close();
-                return afl.innerList.ToList<AudioFile>();
-                } else return null;
-            } catch {
+                if (File.Exists(filename))
+                {
+                    Stream FileStream = File.OpenRead(filename);
+                    BinaryFormatter serializer = new BinaryFormatter();
+                    AudioFileList afl = (AudioFileList)serializer.Deserialize(FileStream);
+                    FileStream.Close();
+                    return afl.innerList.ToList<AudioFile>();
+                }
+                else return null;
+            }
+            catch
+            {
                 return null;
             }
-    }
+        }
 
-    [Serializable()]
-    private class AudioFileList
-    {
-        public AudioFile[] innerList;
+        [Serializable()]
+        private class AudioFileList
+        {
+            public AudioFile[] innerList;
+        }
     }
 }
