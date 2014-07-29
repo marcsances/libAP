@@ -330,7 +330,7 @@ namespace libap
             }
         }
 
-        public Object[] SETPITCH(Object[] paramArray)
+        private Object[] SETPITCH(Object[] paramArray)
         {
 
             if (paramArray.Length == 1)
@@ -353,7 +353,7 @@ namespace libap
             }
         }
 
-        public Object[] GETPITCH(Object[] paramArray)
+        private Object[] GETPITCH(Object[] paramArray)
         {
             int resgp;
             if (this.media_ready) { resgp = this.impl_ap.GetPitch(); } else { resgp = -1; }
@@ -361,7 +361,7 @@ namespace libap
             return retgp;
         }
 
-        public Object[] GETTEMPO(Object[] paramArray)
+        private Object[] GETTEMPO(Object[] paramArray)
         {
             int resgp;
             if (this.media_ready) { resgp = this.impl_ap.GetTempo(); } else { resgp = -1; }
