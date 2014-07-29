@@ -7,4 +7,3 @@ C:\Users\Marc\Dropbox\libap\libap\bin\Debug\libap.dll
 C:\Users\Marc\Dropbox\libap\libap\bin\Debug\libap.pdb
 C:\Users\Marc\Dropbox\libap\libap\obj\Debug\libap.dll
 C:\Users\Marc\Dropbox\libap\libap\obj\Debug\libap.pdb
-C:\Users\Marc\Dropbox\libap\libap\obj\Debug\libap.csprojResolveAssemblyReference.cache

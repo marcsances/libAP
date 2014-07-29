@@ -27,6 +27,7 @@ namespace libap
      * A comparable class representing an audio file.
      * Includes the ID3 information of it.
      */
+    [Serializable()]
     public class AudioFile : IComparable
     {
         private string FILENAME; ///< The file name this instance points to.

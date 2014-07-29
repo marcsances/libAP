@@ -10,6 +10,7 @@ namespace libap
     /**
      * A class to provide an universal framework for ID3 information manipulation. This class is independent from the ID3 metasystem used.
      */
+    [Serializable()]
     public class SongID3
     {
         protected string FILENAME; ///< The file name of this instance.

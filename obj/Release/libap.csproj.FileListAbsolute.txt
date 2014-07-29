@@ -2,3 +2,4 @@ C:\Users\Marc\Dropbox\libap\libap\bin\Release\libap.dll
 C:\Users\Marc\Dropbox\libap\libap\bin\Release\libap.pdb
 C:\Users\Marc\Dropbox\libap\libap\obj\Release\libap.dll
 C:\Users\Marc\Dropbox\libap\libap\obj\Release\libap.pdb
+C:\Users\Marc\Dropbox\libap\libap\obj\Release\libap.csprojResolveAssemblyReference.cache

@@ -20,7 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 namespace libap
 {
     /**
@@ -119,5 +120,91 @@ namespace libap
         {
             return "This program uses libAP.\r\nLibAP is © 2014, MSS Software & Services and licensed under the GNU Lesser General Public License.\r\nThis program uses libzplay. Libzplay is licensed under the GNU General Public License.\r\nShould you have not received a copy of any, visit http://www.gnu.org/licenses/.";
         }
+
+        /**
+         * Exports an AudioFile member to a file via serialization.
+         * \return True if success.
+         */
+        public static bool exportAudioFile(AudioFile af, String filename)
+        {
+            try
+            {
+                Stream FileStream = File.Create(filename);
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(FileStream, af);
+                FileStream.Close();
+                return true;
+            } catch {
+                return false;
+            }
+
+        }
+
+        /**
+         * Imports an AudioFile member from a file via deserialization.
+         * \return AudioFile instance or null if failed.
+         */
+        public static AudioFile importAudioFile(String filename)
+        {
+            try
+            {
+                if (File.Exists(filename))
+                {
+                    Stream FileStream = File.OpenRead(filename);
+                    BinaryFormatter serializer = new BinaryFormatter();
+                    AudioFile af = (AudioFile)serializer.Deserialize(FileStream);
+                    return af;
+                }
+                else return null;
+            } catch {
+                return null;
+            }
+            
+        }
+
+        /**
+         * Exports an audio file list to a file.
+         * \return true if success.
+         */
+        public static bool exportAudioFileList(List<AudioFile> laf, string filename)
+        {
+            try
+            {
+                Stream FileStream = File.Create(filename);
+                BinaryFormatter serializer = new BinaryFormatter();
+                AudioFileList afl = new AudioFileList();
+                laf.CopyTo(afl.innerList,0);
+                serializer.Serialize(FileStream, laf);
+                FileStream.Close();
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        /**
+         * Imports an audio file list from a file.
+         * \return The list or null if failed.
+         */
+        public static List<AudioFile> importAudioFileList(string filename)
+        {
+            try
+            {
+                if (File.Exists(filename)) {
+                Stream FileStream = File.OpenRead(filename);
+                BinaryFormatter serializer = new BinaryFormatter();
+                AudioFileList afl = (AudioFileList)serializer.Deserialize(FileStream);
+                FileStream.Close();
+                return afl.innerList.ToList<AudioFile>();
+                } else return null;
+            } catch {
+                return null;
+            }
+    }
+
+    [Serializable()]
+    private class AudioFileList
+    {
+        public AudioFile[] innerList;
     }
 }
