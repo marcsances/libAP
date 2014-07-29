@@ -216,11 +216,25 @@ namespace libap
         {
             if (this.media_ready)
             {
-                return this.impl_ap.SetMasterVolume(vol, vol);
+                return this.impl_ap.SetPlayerVolume(vol, vol);
             }
             else return false;
         }
-
+        /**
+         * Gets the volume for the audio player instance.
+         * \return the volume from 0 to 100 or -1 if failed.
+         */
+        public int getVolume()
+        {
+            if (this.media_ready)
+            {
+                int v = 0;
+                int k = 0;
+                this.impl_ap.GetPlayerVolume(ref v, ref k);
+                return (v + k) / 2;
+            }
+            else return -1;
+        }
 
         /**
          * Gets a player. Prevents multiple players from getting stacked, allowing easier coding.
