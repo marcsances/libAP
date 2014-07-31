@@ -27,11 +27,19 @@ namespace libap
      * A comparable class representing an audio file.
      * Includes the ID3 information of it.
      */
-    [Serializable()]
     public class AudioFile : IComparable
     {
         private string FILENAME; ///< The file name this instance points to.
-        private FastSongID3 SONG_ID3; ///< The ID3 information of the song.
+        private SongID3 SONG_ID3; ///< The ID3 information of the song.
+
+        /**
+         * Blank constructor.
+         * For internal usage.
+         */
+        private AudioFile()
+        {
+
+        }
         /**
          * Constructor of this class.
          * Can throw an exception if file was not found.
@@ -40,7 +48,7 @@ namespace libap
         public AudioFile(string filename)
         {
             this.FILENAME = filename;
-            this.SONG_ID3 = new FastSongID3(filename);
+            this.SONG_ID3 = new SongID3(filename);
             
         }
         public void Dispose()
@@ -70,6 +78,28 @@ namespace libap
                 return this.SONG_ID3.Title.CompareTo(((AudioFile)af).SONG_ID3.Title);
             }
             else return 1;
+        }
+
+        /**
+         * Converts this instance to a file.
+         * \return A string with the content to write to file.
+         */
+        public string toFile()
+        {
+            return this.ID3Information.toFile();
+        }
+
+        /**
+         * Creates a new instance from a file.
+         * \param The string of the file.
+         * \return the new instance.
+         */
+        public static AudioFile fromFile(string data)
+        {
+            AudioFile af = new AudioFile();
+            af.SONG_ID3 = SongID3.fromFile(data);
+            af.FILENAME = af.SONG_ID3.FileName;
+            return af;
         }
     }
 

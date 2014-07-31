@@ -10,7 +10,6 @@ namespace libap
     /**
      * A class to provide an universal framework for ID3 information manipulation. This class is independent from the ID3 metasystem used.
      */
-    [Serializable()]
     public class SongID3
     {
         protected string FILENAME; ///< The file name of this instance.
@@ -75,7 +74,7 @@ namespace libap
             this.GENRE = tinf.Genre;
             try
             {
-                this.TRACKNO = Convert.ToInt32(tinf.Track);
+                if (tinf.Track.Length > 0) this.TRACKNO = Convert.ToInt32(tinf.Track); else this.TRACKNO = 0;
             }
             catch
             {
@@ -83,7 +82,7 @@ namespace libap
             }
             try
             {
-                this.YEAR = Convert.ToInt32(tinf.Year);
+                if (tinf.Year.Length > 0) this.YEAR = Convert.ToInt32(tinf.Year); else this.YEAR = 0;
             }
             catch
             {
@@ -109,7 +108,7 @@ namespace libap
             this.GENRE = tinf.Genre;
             try
             {
-                this.TRACKNO = Convert.ToInt32(tinf.Track);
+                if (tinf.Track.Length > 0) this.TRACKNO = Convert.ToInt32(tinf.Track); else this.TRACKNO = 0;
             }
             catch
             {
@@ -117,7 +116,7 @@ namespace libap
             }
             try
             {
-                this.YEAR = Convert.ToInt32(tinf.Year);
+                if (tinf.Year.Length > 0) this.YEAR = Convert.ToInt32(tinf.Year); else this.YEAR = 0;
             }
             catch
             {
@@ -266,6 +265,18 @@ namespace libap
         }
 
         /**
+         * Get the file name of the song.
+         */
+
+        public string FileName
+        {
+            get
+            {
+                return this.FILENAME;
+            }
+        }
+
+        /**
          * Save ID3 information to file. Just create a new instance with destination file and all ID3 info you want to save, then call this method from that instance.
          * Please note: To prevent a NotImplementedException in your code, double-check that this function is available in current implementation.
          * Example:
@@ -303,7 +314,63 @@ namespace libap
             {
                 return null;
             }
+
+           
+
         }
 
+
+
+        /**
+         * Converts this instance to a file.
+         * \return A string with the content to write to file.
+         */
+        
+        public string toFile()
+        {
+            string data = "";
+            data += FILENAME + "\r\n";
+            data += TITLE + "\r\n";
+            data += ALBUM + "\r\n";
+            data += ARTIST + "\r\n";
+            data += COMMENT + "\r\n";
+            data += GENRE + "\r\n";
+            data += YEAR + "\r\n";
+            data += TRACKNO + "\r\n";
+            data += Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(ALBUM_IMAGE, typeof(byte[])));
+            return data;
+        }
+
+        
+
+        /**
+         * Converts a string to a new instance of this object.
+         * \param data The string
+         * \return A new instance with the data from the string.
+         */
+        public static SongID3 fromFile(string data)
+        {
+            string[] dat = data.Replace("\r", "").Split('\n');
+            SongID3 sid3 = new SongID3();
+            if (dat.Length < 9) return null;
+            int d = 0;
+            sid3.FILENAME = dat[d]; d++;
+            sid3.TITLE = dat[d]; d++;
+            sid3.ALBUM = dat[d]; d++;
+            sid3.ARTIST = dat[d]; d++;
+            sid3.COMMENT = dat[d]; d++;
+            sid3.GENRE = dat[d]; d++;
+            sid3.YEAR = safeconv(dat[d]); d++;
+            sid3.TRACKNO = safeconv(dat[d]); d++;
+            byte[] BITMAPBYTES = Convert.FromBase64String(dat[d]);
+            try { sid3.ALBUM_IMAGE = (Bitmap)new ImageConverter().ConvertFrom(BITMAPBYTES); }
+            catch { sid3.ALBUM_IMAGE = null;  }
+            return sid3;
+        }
+
+        private static int safeconv(string str)
+        {
+            try { if (str.Length > 0) return Convert.ToInt32(str); else return 0; } catch { return 0; }
+        }
     }
 }

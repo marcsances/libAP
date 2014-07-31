@@ -127,19 +127,8 @@ namespace libap
          */
         public static bool exportAudioFile(AudioFile af, String filename)
         {
-            try
-            {
-                Stream FileStream = File.Create(filename);
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(FileStream, af);
-                FileStream.Close();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-
+            File.WriteAllText(filename, af.toFile());
+            return true;
         }
 
         /**
@@ -148,74 +137,34 @@ namespace libap
          */
         public static AudioFile importAudioFile(String filename)
         {
-            try
-            {
-                if (File.Exists(filename))
-                {
-                    Stream FileStream = File.OpenRead(filename);
-                    BinaryFormatter serializer = new BinaryFormatter();
-                    AudioFile af = (AudioFile)serializer.Deserialize(FileStream);
-                    return af;
-                }
-                else return null;
-            }
-            catch
-            {
-                return null;
-            }
-
+            return AudioFile.fromFile(File.ReadAllText(filename));
         }
 
         /**
-         * Exports an audio file list to a file.
-         * \return true if success.
+         * utility method for other functions
+         * \param str A string.
+         * \return The bytes of that string.
          */
-        public static bool exportAudioFileList(List<AudioFile> laf, string filename)
+        public static byte[] GetStrBytes(string str)
         {
-            try
-            {
-                Stream FileStream = File.Create(filename);
-                BinaryFormatter serializer = new BinaryFormatter();
-                AudioFileList afl = new AudioFileList();
-                laf.CopyTo(afl.innerList, 0);
-                serializer.Serialize(FileStream, laf);
-                FileStream.Close();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            byte[] bytes = new byte[str.Length * sizeof(char)];
+            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
         }
+
 
         /**
-         * Imports an audio file list from a file.
-         * \return The list or null if failed.
+         * utility method for other functions
+         * \param str A byte array
+         * \return The string of that array.
          */
-        public static List<AudioFile> importAudioFileList(string filename)
+        public static string GetString(byte[] bytes)
         {
-            try
-            {
-                if (File.Exists(filename))
-                {
-                    Stream FileStream = File.OpenRead(filename);
-                    BinaryFormatter serializer = new BinaryFormatter();
-                    AudioFileList afl = (AudioFileList)serializer.Deserialize(FileStream);
-                    FileStream.Close();
-                    return afl.innerList.ToList<AudioFile>();
-                }
-                else return null;
-            }
-            catch
-            {
-                return null;
-            }
+            char[] chars = new char[bytes.Length / sizeof(char)];
+            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+            return new string(chars);
         }
 
-        [Serializable()]
-        private class AudioFileList
-        {
-            public AudioFile[] innerList;
-        }
+       
     }
 }
