@@ -28,3 +28,8 @@ OPCODE			GETPITCH
 PARAMS			null
 DESC			Gets the pitch of the audio player instance.
 RETURN			0 int> the pitch, from 1 (minimum) to overflow. Normal value is 100. -1 if media was not available.
+
+OPCODE			GETZPLAY
+PARAMS			null
+DESC			Gets the ZPlay instance of the MediaPlayer object for direct manipulation.
+RETURN			0 libZPlay.ZPlay> the ZPlay instance

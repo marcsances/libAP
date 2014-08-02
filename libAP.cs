@@ -48,11 +48,18 @@ namespace libap
          */
         public static string basename(string filename)
         {
-            string[] filenamearr = filename.Split(getDirectorySeparator(filename));
-            return filenamearr[filenamearr.Length - 1].Split('.')[0];
+            return basenameex(filename).Split('.')[0];
         }
 
-
+        /**
+         * Gets the base name of a filename, with extension.
+         * \return the base name of the file with extension.
+         */
+        public static string basenameex(string filename)
+        {
+            string[] filenamearr = filename.Split(getDirectorySeparator(filename));
+            return filenamearr[filenamearr.Length - 1];
+        }
         /**
          * Portability method: Check which is the directory separator for the given path name.
          * \param filename the full path of the file.
@@ -110,6 +117,17 @@ namespace libap
             {
                 return "";
             }
+        }
+
+        /**
+         * Returns the full acess path to the parent folder.
+         * \param filename the full path of the file.
+         * \return the full path of parent directory.
+         */
+
+        public static string fullparentfolder(string filename)
+        {
+            return filename.Substring(0, filename.LastIndexOf('\\'));
         }
 
         /**

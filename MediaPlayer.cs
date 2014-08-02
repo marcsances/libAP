@@ -309,6 +309,9 @@ namespace libap
                     return GETPITCH(paramArray);
                 case "GETTEMPO":
                     return GETTEMPO(paramArray);
+                case "GETZPLAY":
+                    Object[] arr={this.impl_ap};
+                    return arr;
                 default:
                     return null;
             }

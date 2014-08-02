@@ -288,21 +288,54 @@ namespace libap
             throw new NotImplementedException("This feature is not available in current libAP implementation. Please contact application developer.");
         }
 
+        /**
+         * Forces the load of the album image. Recommended.
+         * \return the album image.
+         */
         public Bitmap forceLoadImage()
         {
             try
             {
-                TID3InfoEx inf = new TID3InfoEx();
-                new ZPlay().LoadFileID3Ex(this.FILENAME, TStreamFormat.sfAutodetect, ref inf, true);
-                if (inf.Picture.Bitmap.Size.Width > 1) return inf.Picture.Bitmap; else return null;
+                // First try to find folder.jpg file
+                if (System.IO.Directory.GetFiles(libAP.parentfolder(FILENAME)).Length>0)
+                {
+                    // try to get folder.jpg
+                    return new Bitmap(folderJPGOrAny(System.IO.Directory.GetFiles(libAP.parentfolder(FILENAME))));
+                }
+                else
+                {
+                    // load from ID3
+                    TID3InfoEx inf = new TID3InfoEx();
+                    new ZPlay().LoadFileID3Ex(this.FILENAME, TStreamFormat.sfAutodetect, ref inf, true);
+                    if (inf.Picture.Bitmap.Size.Width > 1) return inf.Picture.Bitmap; else return null;
+                }
             }
-            catch (Exception ex)
+            catch
             {
                 return tryAgain();
             }
         }
 
-        public Bitmap tryAgain()
+        /**
+         * Internal method.
+         * \param array
+         * \return string
+         */
+        private string folderJPGOrAny(string[] array)
+        {
+            string file = "";
+            foreach (string k in array)
+            {
+                if (k.ToLower() == "folder.jpg") file = k;
+            }
+            if (file == "" && array.Length > 0) return array[0]; else return file;
+        }
+
+        /**
+         * Performs a new attempt on loading album image from ID3. Internal.
+         * \return bitmap
+         */
+        private Bitmap tryAgain()
         {
             try
             {
@@ -310,7 +343,7 @@ namespace libap
                 new ZPlay().LoadFileID3Ex(this.FILENAME, TStreamFormat.sfAutodetect, ref inf, true);
                 if (inf.Picture.Bitmap.Size.Width > 1) return inf.Picture.Bitmap; else return null;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -368,6 +401,11 @@ namespace libap
             return sid3;
         }
 
+        /**
+         * Performs a safe conversion to int32.
+         * \param str the string
+         * \return the int.
+         */
         private static int safeconv(string str)
         {
             try { if (str.Length > 0) return Convert.ToInt32(str); else return 0; } catch { return 0; }
