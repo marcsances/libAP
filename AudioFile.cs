@@ -179,7 +179,8 @@ namespace libap
             }
             if (af is AudioFile)
             {
-                return CompareStrings(this.SONG_ID3.Title,((AudioFile)af).SONG_ID3.Title);
+                //return CompareStrings(this.SONG_ID3.Title,((AudioFile)af).SONG_ID3.Title);
+                return this.SONG_ID3.Title.CompareTo(((AudioFile)af).SONG_ID3.Title);
             }
             else return 1;
         }
