@@ -30,7 +30,7 @@ namespace libap
     public class libAP
     {
         public const int LIBAP_API_VER = 1; ///< Returns the API version of libap API implemented in this library.
-        public const double LIBAP_API_IMPL = 1.0; ///< Returns the version of this implementation of libap API.
+        public const double LIBAP_API_IMPL = 1.1; ///< Returns the version of this implementation of libap API.
         public const int NT_COMPATIBLE = 2; ///< Returns 0 if not compatible with NT platforms, 1 if compatibility is possible, but not guaranteed, 2 if fully compatible.
         public const int W98SE_COMPATIBLE = 0; ///< Returns 0 if not compatible with Windows 98SE/ME, 1 if compatibility is possible, but not guaranteed, 2 if fully compatible.
         public const int WINE_COMPATIBLE = 1; ///< Returns 0 if not compatible with Wine platforms, 1 if compatibility is possible, but not guaranteed, 2 if fully compatible.
@@ -44,11 +44,22 @@ namespace libap
 
         /**
          * Get the base name of that filename, without extension.
+         * \param filename the file name
          * \return the base name of the file.
          */
         public static string basename(string filename)
         {
             return basenameex(filename).Split('.')[0];
+        }
+
+        /**
+         * Get the extension of that filename.
+         * \param filename the file name
+         * \return the extension of the file.
+         */
+        public static string getext(string filename)
+        {
+            if (filename != "" && filename != null) return filename.Substring(filename.LastIndexOf('.'), filename.Length - filename.LastIndexOf('.')); else return "";
         }
 
         /**

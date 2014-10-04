@@ -297,10 +297,10 @@ namespace libap
             try
             {
                 // First try to find folder.jpg file
-                if (System.IO.Directory.GetFiles(libAP.parentfolder(FILENAME)).Length>0)
+                if (System.IO.Directory.GetFiles(libAP.fullparentfolder(FILENAME)).Length>0)
                 {
                     // try to get folder.jpg
-                    return new Bitmap(folderJPGOrAny(System.IO.Directory.GetFiles(libAP.parentfolder(FILENAME))));
+                    return new Bitmap(folderJPGOrAny(System.IO.Directory.GetFiles(libAP.fullparentfolder(FILENAME))));
                 }
                 else
                 {
@@ -326,7 +326,7 @@ namespace libap
             string file = "";
             foreach (string k in array)
             {
-                if (k.ToLower() == "folder.jpg") file = k;
+                if (libAP.basenameex(k).ToLower() == "folder.jpg") file = k;
             }
             if (file == "" && array.Length > 0) return array[0]; else return file;
         }

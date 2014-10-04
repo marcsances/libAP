@@ -71,11 +71,115 @@ namespace libap
             }
         }
 
+        /**
+         * These functions are under test.
+         * Do not use.
+         */
+
+        private void UnitTest()
+        {
+            Console.WriteLine("Performing unit tests over AudioFile.cs...");
+            string a = "FILE 1";
+            string b = "FILE 2";
+            string c = "FILE 20";
+            string d = "FILE 30";
+            string e = "03 - file";
+            string f = "FILA 2";
+            string g = "15 - file";
+            Console.WriteLine("TEST 1. Expected result: -1 >>> " + CompareStrings(a,b));
+            Console.WriteLine("TEST 1. Expected result: -1 >>> " + CompareStrings(a, c));
+            Console.WriteLine("TEST 1. Expected result: -1 >>> " + CompareStrings(b, c));
+            Console.WriteLine("TEST 1. Expected result: -1 >>> " + CompareStrings(c, d));
+            Console.WriteLine("TEST 1. Expected result: -1 >>> " + CompareStrings(e, g));
+            Console.WriteLine("TEST 1. Expected result: 1 >>> " + CompareStrings(a, f));
+            Console.WriteLine("TEST 1. Expected result: 0 >>> " + CompareStrings(a, a));
+            Console.WriteLine("TEST 1. Expected result: 1 >>> " + CompareStrings(g, e));
+        }
+
+        private int FindFullNumber(char[] a, int pos, int no)
+        {
+            if (pos==a.Length || !Char.IsDigit(a[pos])) return no;
+            else
+            {
+                return FindFullNumber(a, pos + 1, no * 10 + a[pos]);
+            }
+        }
+
+        private int FindFullNumber(char[] a, int pos)
+        {
+            if (a.Length==0 || Char.IsDigit(a[pos])) return FindFullNumber(a, pos + 1, a[pos]);
+            else return 0;
+        }
+
+        private int CompareDigits(char[] a, char[] b, int pos)
+        {
+            if (Char.IsDigit(a[pos]) && !Char.IsDigit(b[pos]))
+            {
+                return -1;
+            }
+            else if (!Char.IsDigit(a[pos]) && Char.IsDigit(a[pos]))
+            {
+                return 1;
+            }
+            else if (!Char.IsDigit(a[pos]) && !Char.IsDigit(b[pos]))
+            {
+                return CompareStrings(a, b, pos);
+            }
+            else {
+                int ai = FindFullNumber(a, pos);
+                int bi = FindFullNumber(b, pos);
+                if (ai < bi) return -1;
+                else if (ai == bi) return CompareStrings(a, b, pos + ai.ToString().Length);
+                else return 1;
+            }
+        }
+
+        private int CompareStrings(char[] a, char[] b, int pos)
+        {
+            if (a.Length==pos) {
+                if (b.Length==pos) {return 0;}
+                else {return -1;}
+            }
+            else if (b.Length == pos)
+            {
+                return 1;
+            }
+            if (!Char.IsDigit(a[pos]) && !Char.IsDigit(b[pos]))
+            {
+                if (a[pos]<b[pos]) {
+                    return -1;
+                } else if (a[pos]==b[pos]) {
+                    return CompareStrings(a,b,pos+1);
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                return CompareDigits(a, b, pos);
+            }
+
+        }
+
+        private int CompareStrings(string a, string b)
+        {
+            return CompareStrings(a.ToCharArray(), b.ToCharArray(), 0);
+        }
+
+        /** End of tests **/
+        public static bool once = false;
         public int CompareTo(object af)
         {
+            if (!once)
+            {
+                //UnitTest();
+                once = true;
+            }
             if (af is AudioFile)
             {
-                return this.SONG_ID3.Title.CompareTo(((AudioFile)af).SONG_ID3.Title);
+                return CompareStrings(this.SONG_ID3.Title,((AudioFile)af).SONG_ID3.Title);
             }
             else return 1;
         }

@@ -46,7 +46,7 @@ namespace libap
         {
             this.af = af;
             this.impl_ap = new ZPlay(); // impl
-            if (!this.impl_ap.OpenFile(this.af.FileName, TStreamFormat.sfAutodetect)) { throw new Exception("Unknown error during file initialization"); }
+            if (!this.impl_ap.OpenFile(this.af.FileName, TStreamFormat.sfAutodetect)) { Console.WriteLine("Unknown error during file initialization."); }
             else { this.media_ready = true; this.stopped = true; this.paused = false;  }// impl 
         }
 
@@ -170,9 +170,16 @@ namespace libap
         {
             if (this.media_ready)
             {
-                TStreamInfo inf = new TStreamInfo();
-                this.impl_ap.GetStreamInfo(ref inf);
-                return inf.Length.ms;
+                try
+                {
+                    TStreamInfo inf = new TStreamInfo();
+                    this.impl_ap.GetStreamInfo(ref inf);
+                    return inf.Length.ms;
+                }
+                catch
+                {
+                    return -1;
+                }
             }
             else return -1;
         }
@@ -230,7 +237,7 @@ namespace libap
             {
                 int v = 0;
                 int k = 0;
-                this.impl_ap.GetPlayerVolume(ref v, ref k);
+                if (this.impl_ap != null) this.impl_ap.GetPlayerVolume(ref v, ref k); else return 100;
                 return (v + k) / 2;
             }
             else return -1;
