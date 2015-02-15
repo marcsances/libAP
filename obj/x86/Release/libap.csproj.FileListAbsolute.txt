@@ -1,0 +1,4 @@
+C:\Users\Marc\Dropbox\libap\libap\bin\x86\Release\libap.dll
+C:\Users\Marc\Dropbox\libap\libap\bin\x86\Release\libap.pdb
+C:\Users\Marc\Dropbox\libap\libap\obj\x86\Release\libap.dll
+C:\Users\Marc\Dropbox\libap\libap\obj\x86\Release\libap.pdb
